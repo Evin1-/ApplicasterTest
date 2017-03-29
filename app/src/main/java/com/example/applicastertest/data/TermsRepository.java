@@ -2,7 +2,6 @@ package com.example.applicastertest.data;
 
 import com.example.applicastertest.App;
 import com.example.applicastertest.data.entities.SearchTerm;
-import com.example.applicastertest.ui.history.HistoryPresenter;
 
 import java.util.List;
 
@@ -10,7 +9,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.functions.Function;
 import io.realm.Realm;
 import io.realm.RealmResults;
 

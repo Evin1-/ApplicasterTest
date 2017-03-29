@@ -1,7 +1,6 @@
 package com.example.applicastertest.ui.history;
 
 import com.example.applicastertest.data.TermsRepository;
-import com.example.applicastertest.data.TweetsRepository;
 
 import dagger.Module;
 import dagger.Provides;

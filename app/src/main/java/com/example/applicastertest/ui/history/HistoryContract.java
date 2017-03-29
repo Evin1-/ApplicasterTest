@@ -1,7 +1,6 @@
 package com.example.applicastertest.ui.history;
 
 import com.example.applicastertest.data.entities.SearchTerm;
-import com.example.applicastertest.data.entities.TweetSearch;
 import com.example.applicastertest.ui.BasePresenter;
 import com.example.applicastertest.ui.BaseView;
 

@@ -1,7 +1,5 @@
 package com.example.applicastertest.data.entities;
 
-import android.util.Log;
-
 import com.twitter.sdk.android.core.models.Tweet;
 
 import io.realm.RealmObject;
