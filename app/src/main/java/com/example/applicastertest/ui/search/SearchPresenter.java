@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.example.applicastertest.data.TweetsRepository;
 import com.example.applicastertest.data.entities.TweetSearch;
-import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.List;
 

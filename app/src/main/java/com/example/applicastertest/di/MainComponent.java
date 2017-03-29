@@ -5,7 +5,6 @@ import com.example.applicastertest.ui.input.InputFragment;
 import com.example.applicastertest.ui.input.InputModule;
 import com.example.applicastertest.ui.main.MainActivity;
 import com.example.applicastertest.ui.main.MainModule;
-import com.example.applicastertest.ui.main.MainPresenter;
 import com.example.applicastertest.ui.search.SearchFragment;
 import com.example.applicastertest.ui.search.SearchModule;
 
