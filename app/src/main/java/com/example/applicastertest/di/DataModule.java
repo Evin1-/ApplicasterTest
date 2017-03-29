@@ -1,6 +1,7 @@
 package com.example.applicastertest.di;
 
 import com.example.applicastertest.App;
+import com.example.applicastertest.data.TermsRepository;
 import com.example.applicastertest.data.TweetsRepository;
 
 import dagger.Module;
@@ -24,6 +25,11 @@ public class DataModule {
     @Provides
     public TweetsRepository provideTweetsRepository() {
         return new TweetsRepository(app);
+    }
+
+    @Provides
+    public TermsRepository provideTermsRepository() {
+        return new TermsRepository(app);
     }
 
     @Provides

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.applicastertest.App;
 import com.example.applicastertest.R;
+import com.example.applicastertest.ui.history.HistoryFragment;
 import com.example.applicastertest.ui.input.InputFragment;
 import com.example.applicastertest.ui.search.SearchFragment;
 
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         InputFragment.Callback {
     private static final String INPUT_FRAGMENT_TAG = "INPUT_FRAGMENT_TAG";
     private static final String SEARCH_FRAGMENT_TAG = "SEARCH_FRAGMENT_TAG";
+    private static final String HISTORY_FRAGMENT_TAG = "HISTORY_FRAGMENT_TAG";
+
+    private static final String APPLICASTER_SEARCH = "#Miami";
 
     // TODO: 3/28/17 Hide keys with NDK
 
@@ -77,10 +81,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.nav_camera) {
-
-            } else if (id == R.id.nav_gallery) {
-
+            if (id == R.id.d_main_home) {
+                searchTermSelected(APPLICASTER_SEARCH);
+            } else if (id == R.id.d_main_history) {
+                showHistory();
             }
 
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -132,6 +136,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.a_main_frame, SearchFragment.newInstance(searchTerm), SEARCH_FRAGMENT_TAG)
+                .commit();
+    }
+
+    private void showHistory() {
+        textView.setVisibility(View.GONE);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.a_main_frame, new HistoryFragment(), HISTORY_FRAGMENT_TAG)
                 .commit();
     }
 }
