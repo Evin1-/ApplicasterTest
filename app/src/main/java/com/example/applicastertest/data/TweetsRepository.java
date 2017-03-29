@@ -2,6 +2,7 @@ package com.example.applicastertest.data;
 
 import android.util.Log;
 
+import com.example.applicastertest.App;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiClient;
@@ -17,12 +18,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import retrofit2.Call;
 
 /**
@@ -34,6 +38,13 @@ public class TweetsRepository {
 
     private static final String POPULAR_TAG = "popular";
     private static final Integer TWEET_LIMIT = 10;
+
+    @Inject
+    Realm realm;
+
+    public TweetsRepository(App app) {
+        setupDaggerComponent(app);
+    }
 
     public void getTweets(String searchTerm, Observer<List<Tweet>> observer) {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
@@ -66,7 +77,7 @@ public class TweetsRepository {
     }
 
     private void saveTweets(String searchTerm, List<Tweet> tweets) {
-        Log.d(TAG, "saveTweets: " + searchTerm + " " + tweets);
+
     }
 
     private List<Tweet> orderTweets(List<Tweet> tweets) {
@@ -75,5 +86,9 @@ public class TweetsRepository {
         Collections.sort(orderedTweets, (tweet1, tweet2)
                 -> Integer.valueOf(tweet2.user.followersCount).compareTo(tweet1.user.followersCount));
         return orderedTweets;
+    }
+
+    private void setupDaggerComponent(App app) {
+        app.getMainComponent().inject(this);
     }
 }

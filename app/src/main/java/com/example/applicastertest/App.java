@@ -14,6 +14,7 @@ import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
 
 /**
  * Created by user on 3/28/17.
@@ -31,6 +32,20 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initializeFabric();
+        initializeRealm();
+
+        mainComponent = DaggerMainComponent.builder()
+                .dataModule(new DataModule(this))
+                .searchModule(new SearchModule())
+                .build();
+    }
+
+    private void initializeRealm() {
+        Realm.init(getApplicationContext());
+    }
+
+    private void initializeFabric() {
         try {
             ApplicationInfo applicationInfo = getPackageManager()
                     .getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
@@ -42,11 +57,6 @@ public class App extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "onCreate: ", e);
         }
-
-        mainComponent = DaggerMainComponent.builder()
-                .dataModule(new DataModule())
-                .searchModule(new SearchModule())
-                .build();
     }
 
     public MainComponent getMainComponent() {
