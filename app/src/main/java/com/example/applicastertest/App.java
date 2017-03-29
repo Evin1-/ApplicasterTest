@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.applicastertest.di.DaggerMainComponent;
+import com.example.applicastertest.di.DataModule;
+import com.example.applicastertest.di.MainComponent;
+import com.example.applicastertest.ui.search.SearchModule;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
@@ -20,6 +24,8 @@ public class App extends Application {
     private static final String TAG = "AppTAG_";
     private static final String TWITTER_KEY = "TWITTER_KEY";
     private static final String TWITTER_SECRET = "TWITTER_SECRET";
+
+    private MainComponent mainComponent;
 
     @Override
     public void onCreate() {
@@ -36,5 +42,14 @@ public class App extends Application {
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "onCreate: ", e);
         }
+
+        mainComponent = DaggerMainComponent.builder()
+                .dataModule(new DataModule())
+                .searchModule(new SearchModule())
+                .build();
+    }
+
+    public MainComponent getMainComponent() {
+        return mainComponent;
     }
 }

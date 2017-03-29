@@ -3,35 +3,41 @@ package com.example.applicastertest.ui.search;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.applicastertest.App;
 import com.example.applicastertest.R;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.models.Search;
 import com.twitter.sdk.android.core.models.Tweet;
-import com.twitter.sdk.android.core.services.SearchService;
-import com.twitter.sdk.android.core.services.StatusesService;
 
-import retrofit2.Call;
+import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchContract.View {
     private static final String TAG = "SearchFragmentTAG_";
+
+    @Inject
+    SearchContract.Presenter presenter;
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupDaggerComponent();
+        presenter.attachView(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,30 +46,46 @@ public class SearchFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
-        StatusesService statusesService = twitterApiClient.getStatusesService();
+        presenter.loadTweets("#USAvPAN");
+    }
 
-        SearchService searchService = twitterApiClient.getSearchService();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
 
-        Call<Search> tweetCall = searchService.tweets("Hello", null, null, null, null, null, null, null, null, null);
+    @Override
+    public void showProgress() {
+        // TODO: 3/28/17 Show Progress Bar
+    }
 
-        tweetCall.enqueue(new Callback<Search>() {
-            @Override
-            public void success(Result<Search> result) {
-                Log.d(TAG, "success: " + result.data.tweets);
-                for (Tweet tweet : result.data.tweets) {
-                    Log.d(TAG, "success: " + tweet.text);
-                }
-            }
+    @Override
+    public void hideProgress() {
+        // TODO: 3/28/17 Hide Progress Bar
+    }
 
-            @Override
-            public void failure(TwitterException exception) {
+    @Override
+    public void showError(String error) {
+        if (getView() == null) {
+            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(getView().findViewById(R.id.f_search_layout), error, Snackbar.LENGTH_LONG)
+                    .show();
+        }
+    }
 
-            }
-        });
+    @Override
+    public void updateTweets(List<Tweet> tweets) {
+        for (Tweet tweet : tweets) {
+            Log.d(TAG, "updateTweets: " + tweet);
+        }
+    }
+
+    private void setupDaggerComponent() {
+        ((App) getActivity().getApplication()).getMainComponent().inject(this);
     }
 }

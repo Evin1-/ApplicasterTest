@@ -28,7 +28,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-                TWITTER_KEY: "0tdQZWHHSjfFBGftJuTSo81EE",
+                TWITTER_KEY   : "0tdQZWHHSjfFBGftJuTSo81EE",
                 TWITTER_SECRET: "6KmcRhcyiqmTJP9hHrbQrDZ4TbxQpv1lMyAlzBjBuPT5xzkGOc"
         ]
     }
@@ -63,4 +63,7 @@ dependencies {
 
     compile 'com.google.dagger:dagger:2.8'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
+
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
 }

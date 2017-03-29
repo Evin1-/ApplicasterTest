@@ -14,9 +14,6 @@ import com.example.applicastertest.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
