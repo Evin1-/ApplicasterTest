@@ -1,8 +1,8 @@
 package com.example.applicastertest.data;
 
-import android.util.Log;
-
 import com.example.applicastertest.App;
+import com.example.applicastertest.data.entities.SearchTerm;
+import com.example.applicastertest.data.entities.TweetSearch;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterApiClient;
@@ -14,19 +14,16 @@ import com.twitter.sdk.android.core.services.SearchService;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 
 /**
@@ -77,7 +74,17 @@ public class TweetsRepository {
     }
 
     private void saveTweets(String searchTerm, List<Tweet> tweets) {
-
+        realm.executeTransactionAsync(realm1 -> {
+            SearchTerm searchTermNonManaged = new SearchTerm(searchTerm);
+            final SearchTerm searchTermManaged = realm1.copyToRealm(searchTermNonManaged);
+            for (Tweet tweet : tweets) {
+                TweetSearch tweetSearch = TweetSearch.create(searchTermManaged, tweet);
+                final TweetSearch tweetSearchManaged = realm1.copyToRealm(tweetSearch);
+            }
+        }, () -> {
+            final RealmResults<SearchTerm> searchTermRealmResults = realm.where(SearchTerm.class).findAll();
+            System.out.println(searchTermRealmResults.size());
+        });
     }
 
     private List<Tweet> orderTweets(List<Tweet> tweets) {
