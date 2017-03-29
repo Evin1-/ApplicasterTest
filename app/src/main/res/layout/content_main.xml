@@ -14,4 +14,10 @@
         android:layout_height="wrap_content"
         android:text="Hello World!" />
 
+    <fragment
+        class="com.example.applicastertest.ui.search.SearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="SEARCH_FRAGMENT" />
+
 </LinearLayout>
