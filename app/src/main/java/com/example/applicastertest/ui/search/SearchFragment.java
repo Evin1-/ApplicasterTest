@@ -73,7 +73,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         if (getView() == null) {
             Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
         } else {
-            Snackbar.make(getView().findViewById(R.id.f_search_layout), error, Snackbar.LENGTH_LONG)
+            Snackbar.make(getView(), error, Snackbar.LENGTH_LONG)
                     .show();
         }
     }
@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
     @Override
     public void updateTweets(List<Tweet> tweets) {
         for (Tweet tweet : tweets) {
-            Log.d(TAG, "updateTweets: " + tweet);
+            Log.d(TAG, "updateTweets: " + tweet.user.followersCount + " " + tweet.text);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.applicastertest.ui.search;
 
+import android.util.Log;
+
 import com.example.applicastertest.data.TweetsRepository;
 import com.twitter.sdk.android.core.models.Tweet;
 
@@ -13,6 +15,8 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class SearchPresenter implements SearchContract.Presenter, Observer<List<Tweet>> {
+    private static final String TAG = "SearchPresenterTAG_";
+
     private TweetsRepository tweetsRepository;
     private SearchContract.View view;
 
@@ -55,6 +59,7 @@ public class SearchPresenter implements SearchContract.Presenter, Observer<List<
     @Override
     public void onError(Throwable e) {
         view.showError(e.toString());
+        Log.e(TAG, "onError: ", e);
     }
 
     @Override

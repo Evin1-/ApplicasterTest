@@ -11,9 +11,17 @@ import com.twitter.sdk.android.core.models.Search;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.core.services.SearchService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 
 /**
@@ -23,26 +31,43 @@ import retrofit2.Call;
 public class TweetsRepository {
     private static final String TAG = "TweetsRepositoryTAG_";
 
+    private static final String POPULAR_TAG = "popular";
+    private static final Integer TWEET_LIMIT = 10;
+
     public void getTweets(String searchTerm, Observer<List<Tweet>> observer) {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         SearchService searchService = twitterApiClient.getSearchService();
 
         Call<Search> tweetCall = searchService.tweets(searchTerm,
-                null, null, null, null, null, null, null, null, null);
+                null, null, null, POPULAR_TAG, TWEET_LIMIT, null, null, null, null);
 
         tweetCall.enqueue(new Callback<Search>() {
             @Override
             public void success(Result<Search> result) {
-                Log.d(TAG, "success: " + result.data.tweets);
-                for (Tweet tweet : result.data.tweets) {
-                    Log.d(TAG, "success: " + tweet.text);
+                if (result.response.isSuccessful()) {
+                    formatTweets(result.data.tweets, observer);
                 }
             }
 
             @Override
             public void failure(TwitterException exception) {
-
+                Observable.error(exception);
             }
         });
+    }
+
+    private void formatTweets(List<Tweet> tweets, Observer<List<Tweet>> observer) {
+        Observable.fromCallable(() -> orderTweets(tweets))
+                .observeOn(Schedulers.computation())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    private List<Tweet> orderTweets(List<Tweet> tweets) {
+        List<Tweet> orderedTweets = new ArrayList<>(tweets);
+        Collections.copy(orderedTweets, tweets);
+        Collections.sort(orderedTweets, (tweet1, tweet2)
+                -> Integer.valueOf(tweet2.user.followersCount).compareTo(tweet1.user.followersCount));
+        return orderedTweets;
     }
 }
