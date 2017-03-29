@@ -14,6 +14,8 @@ import io.reactivex.disposables.Disposable;
  * Created by user on 3/28/17.
  */
 
+
+
 public class SearchPresenter implements SearchContract.Presenter, Observer<List<TweetSearch>> {
     private static final String TAG = "SearchPresenterTAG_";
 
