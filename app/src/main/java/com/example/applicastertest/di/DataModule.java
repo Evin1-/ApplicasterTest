@@ -6,6 +6,7 @@ import com.example.applicastertest.data.TweetsRepository;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by user on 3/28/17.
@@ -26,7 +27,14 @@ public class DataModule {
     }
 
     @Provides
-    public Realm provideRealm() {
-        return Realm.getDefaultInstance();
+    public RealmConfiguration provideRealmConfiguration() {
+        return new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+    }
+
+    @Provides
+    public Realm provideRealm(RealmConfiguration realmConfiguration) {
+        return Realm.getInstance(realmConfiguration);
     }
 }

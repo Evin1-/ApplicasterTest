@@ -3,6 +3,7 @@ package com.example.applicastertest.ui.search;
 import android.util.Log;
 
 import com.example.applicastertest.data.TweetsRepository;
+import com.example.applicastertest.data.entities.TweetSearch;
 import com.twitter.sdk.android.core.models.Tweet;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import io.reactivex.disposables.Disposable;
  * Created by user on 3/28/17.
  */
 
-public class SearchPresenter implements SearchContract.Presenter, Observer<List<Tweet>> {
+public class SearchPresenter implements SearchContract.Presenter, Observer<List<TweetSearch>> {
     private static final String TAG = "SearchPresenterTAG_";
 
     private TweetsRepository tweetsRepository;
@@ -52,8 +53,12 @@ public class SearchPresenter implements SearchContract.Presenter, Observer<List<
     }
 
     @Override
-    public void onNext(List<Tweet> value) {
-        view.updateTweets(value);
+    public void onNext(List<TweetSearch> tweets) {
+        if (tweets == null || tweets.size() == 0) {
+            view.showError("No results found!");
+        } else {
+            view.updateTweets(tweets);
+        }
     }
 
     @Override

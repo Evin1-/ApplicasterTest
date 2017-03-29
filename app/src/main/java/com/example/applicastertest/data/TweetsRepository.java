@@ -21,8 +21,10 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
 
@@ -43,7 +45,7 @@ public class TweetsRepository {
         setupDaggerComponent(app);
     }
 
-    public void getTweets(String searchTerm, Observer<List<Tweet>> observer) {
+    public void getTweets(String searchTerm, Observer<List<TweetSearch>> observer) {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         SearchService searchService = twitterApiClient.getSearchService();
 
@@ -65,11 +67,17 @@ public class TweetsRepository {
         });
     }
 
-    private void formatTweets(String searchTerm, List<Tweet> tweets, Observer<List<Tweet>> observer) {
+    private void formatTweets(String searchTerm, List<Tweet> tweets, Observer<List<TweetSearch>> observer) {
         Observable.fromCallable(() -> orderTweets(tweets)) // Order tweets
-                .doOnNext(tweets1 -> saveTweets(searchTerm, tweets1)) // Save tweets
-                .observeOn(Schedulers.computation())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .doOnNext(unsavedTweets -> saveTweets(searchTerm, unsavedTweets)) // Save tweets
+                .map((Function<List<Tweet>, List<TweetSearch>>) normalTweets -> {
+                    ArrayList<TweetSearch> tweetSearches = new ArrayList<>();
+                    for (Tweet tweet : normalTweets) {
+                        tweetSearches.add(TweetSearch.create(tweet));
+                    }
+                    return tweetSearches;
+                }) // Convert to known entities
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 

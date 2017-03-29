@@ -12,6 +12,7 @@ public class TweetSearch extends RealmObject {
     private SearchTerm searchTerm;
     private String userName;
     private String userPicture;
+    private Integer userFollowers;
     private String text;
     private String image;
 
@@ -19,10 +20,11 @@ public class TweetSearch extends RealmObject {
 
     }
 
-    public TweetSearch(SearchTerm searchTerm, String userName, String userPicture, String text, String image) {
+    public TweetSearch(SearchTerm searchTerm, String userName, String userPicture, Integer userFollowers, String text, String image) {
         this.searchTerm = searchTerm;
         this.userName = userName;
         this.userPicture = userPicture;
+        this.userFollowers = userFollowers;
         this.text = text;
         this.image = image;
     }
@@ -67,13 +69,30 @@ public class TweetSearch extends RealmObject {
         this.image = image;
     }
 
+    public Integer getUserFollowers() {
+        return userFollowers;
+    }
+
+    public void setUserFollowers(Integer userFollowers) {
+        this.userFollowers = userFollowers;
+    }
+
     public static TweetSearch create(SearchTerm searchTerm, Tweet tweet) {
         return new TweetSearch.Builder()
                 .setSearchTerm(searchTerm)
                 .setUserName(tweet.user.name)
                 .setUserPicture(tweet.user.profileBackgroundImageUrl)
+                .setUserFollowers(tweet.user.followersCount)
                 .setText(tweet.text)
-//                .setImage(tweet.)
+                .build();
+    }
+
+    public static TweetSearch create(Tweet tweet) {
+        return new TweetSearch.Builder()
+                .setUserName(tweet.user.name)
+                .setUserPicture(tweet.user.profileBackgroundImageUrl)
+                .setUserFollowers(tweet.user.followersCount)
+                .setText(tweet.text)
                 .build();
     }
 
@@ -81,6 +100,7 @@ public class TweetSearch extends RealmObject {
         private SearchTerm searchTerm;
         private String userName;
         private String userPicture;
+        private Integer userFollowers;
         private String text;
         private String image;
 
@@ -99,6 +119,11 @@ public class TweetSearch extends RealmObject {
             return this;
         }
 
+        public Builder setUserFollowers(Integer userFollowers) {
+            this.userFollowers = userFollowers;
+            return this;
+        }
+
         public Builder setText(String text) {
             this.text = text;
             return this;
@@ -110,7 +135,7 @@ public class TweetSearch extends RealmObject {
         }
 
         public TweetSearch build() {
-            return new TweetSearch(searchTerm, userName, userPicture, text, image);
+            return new TweetSearch(searchTerm, userName, userPicture, userFollowers, text, image);
         }
     }
 }
