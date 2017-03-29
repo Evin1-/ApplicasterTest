@@ -14,8 +14,13 @@ import com.example.applicastertest.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
+
+    // TODO: 3/28/17 Hide keys with NDK
 
     @BindView(R.id.a_main_drawer)
     DrawerLayout drawerLayout;
