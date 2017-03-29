@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.applicastertest.App;
 import com.example.applicastertest.R;
 import com.example.applicastertest.data.entities.TweetSearch;
+import com.example.applicastertest.util.SimpleItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +84,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(searchAdapter);
+        recyclerView.addItemDecoration(new SimpleItemDecoration(10));
 
         presenter.loadTweets(getArguments().getString(SEARCH_TERM_KEY));
     }

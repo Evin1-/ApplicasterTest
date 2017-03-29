@@ -1,11 +1,15 @@
 package com.example.applicastertest.ui.search;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.applicastertest.R;
 import com.example.applicastertest.data.entities.TweetSearch;
 
 import java.util.List;
@@ -16,6 +20,8 @@ import java.util.List;
 
 class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
+    private static final String TAG = "SearchAdapterTAG_";
+
     private List<TweetSearch> tweets;
 
     public SearchAdapter(List<TweetSearch> tweets) {
@@ -25,7 +31,7 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
     @Override
     public SearchAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = layoutInflater.inflate(R.layout.recycler_search, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,16 +49,29 @@ class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView textView;
+        private final ImageView imageView;
+        private final TextView textViewName;
+        private final TextView textViewFollowers;
+        private final TextView textViewText;
 
         ViewHolder(View itemView) {
             super(itemView);
 
-            textView = (TextView) itemView.findViewById(android.R.id.text1);
+            imageView = (ImageView) itemView.findViewById(R.id.r_search_pic);
+            textViewName = (TextView) itemView.findViewById(R.id.r_search_name);
+            textViewFollowers = (TextView) itemView.findViewById(R.id.r_search_followers);
+            textViewText = (TextView) itemView.findViewById(R.id.r_search_text);
         }
 
         void bind(TweetSearch tweetSearch) {
-            textView.setText(tweetSearch.getText());
+            Glide.with(itemView.getContext())
+                    .load(tweetSearch.getUserPicture())
+                    .centerCrop()
+                    .into(imageView);
+
+            textViewName.setText(tweetSearch.getUserName());
+            textViewFollowers.setText(String.format("%d", tweetSearch.getUserFollowers()));
+            textViewText.setText(tweetSearch.getText());
         }
     }
 }

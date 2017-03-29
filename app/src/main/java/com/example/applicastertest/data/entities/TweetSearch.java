@@ -1,5 +1,7 @@
 package com.example.applicastertest.data.entities;
 
+import android.util.Log;
+
 import com.twitter.sdk.android.core.models.Tweet;
 
 import io.realm.RealmObject;
@@ -9,6 +11,8 @@ import io.realm.RealmObject;
  */
 
 public class TweetSearch extends RealmObject {
+    private static final String TAG = "TweetSearchTAG_";
+
     private SearchTerm searchTerm;
     private String userName;
     private String userPicture;
@@ -81,7 +85,7 @@ public class TweetSearch extends RealmObject {
         return new TweetSearch.Builder()
                 .setSearchTerm(searchTerm)
                 .setUserName(tweet.user.name)
-                .setUserPicture(tweet.user.profileBackgroundImageUrl)
+                .setUserPicture(tweet.user.profileImageUrl)
                 .setUserFollowers(tweet.user.followersCount)
                 .setText(tweet.text)
                 .build();
@@ -90,7 +94,7 @@ public class TweetSearch extends RealmObject {
     public static TweetSearch create(Tweet tweet) {
         return new TweetSearch.Builder()
                 .setUserName(tweet.user.name)
-                .setUserPicture(tweet.user.profileBackgroundImageUrl)
+                .setUserPicture(tweet.user.profileImageUrl)
                 .setUserFollowers(tweet.user.followersCount)
                 .setText(tweet.text)
                 .build();
