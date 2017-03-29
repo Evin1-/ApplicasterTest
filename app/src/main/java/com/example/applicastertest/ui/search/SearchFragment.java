@@ -36,8 +36,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
     @Inject
     SearchContract.Presenter presenter;
 
-    @BindView(R.id.f_search_swipe)
-    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.f_search_recycler)
     RecyclerView recyclerView;
 
