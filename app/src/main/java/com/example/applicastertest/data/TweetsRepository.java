@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -45,7 +46,7 @@ public class TweetsRepository {
             @Override
             public void success(Result<Search> result) {
                 if (result.response.isSuccessful()) {
-                    formatTweets(result.data.tweets, observer);
+                    formatTweets(searchTerm, result.data.tweets, observer);
                 }
             }
 
@@ -56,11 +57,16 @@ public class TweetsRepository {
         });
     }
 
-    private void formatTweets(List<Tweet> tweets, Observer<List<Tweet>> observer) {
-        Observable.fromCallable(() -> orderTweets(tweets))
+    private void formatTweets(String searchTerm, List<Tweet> tweets, Observer<List<Tweet>> observer) {
+        Observable.fromCallable(() -> orderTweets(tweets)) // Order tweets
+                .doOnNext(tweets1 -> saveTweets(searchTerm, tweets1)) // Save tweets
                 .observeOn(Schedulers.computation())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    private void saveTweets(String searchTerm, List<Tweet> tweets) {
+        Log.d(TAG, "saveTweets: " + searchTerm + " " + tweets);
     }
 
     private List<Tweet> orderTweets(List<Tweet> tweets) {
